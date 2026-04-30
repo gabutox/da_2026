@@ -1,3 +1,18 @@
 ### Obtener todos los usuarios
 GET http://localhost:3000/api/users
 Content-Type: application/json
+
+###
+### Crear un nuevo usuario
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+  "user": "Simon",
+  "password": "simon123"
+}
+
+###
+### Eliminar un usuario
+DELETE http://localhost:3000/api/users/3
+Content-Type: application/json

@@ -3,7 +3,7 @@ import './dependencies.js'; // Inicializa el contenedor de dependencias
 import mainRouter from './api/router.js'; // Importa el enrutador central
 
 const app = express();
-app.use(express.json());
+app.use(express.json()); //Esto decodifica el cuerpo de las solicitudes como JSON
 
 console.log('Configurando rutas de usuario');
 
