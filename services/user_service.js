@@ -3,7 +3,10 @@ import { getDependency } from '../dependency.js';
 export class UserService {
     getUsers() {
         const repo = getDependency('userRepo');
-        return repo.getAll();
+        const allUsers = repo.getAll();
+
+        // Retornar usuarios sin mostrar las passwords
+        return allUsers.map(u => ({ id: u.id, user: u.user }));
     }
 
     addUser(user, password) {
