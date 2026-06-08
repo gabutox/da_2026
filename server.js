@@ -1,15 +1,34 @@
-import express from 'express';
-import './dependencies.js'; // Inicializa el contenedor de dependencias
-import mainRouter from './api/router.js'; // Importa el enrutador central
+import express from "express";
+import mongoose from "mongoose";
+import config from "./config.js";
+import { createRouter } from "./api/router.js";
+import "./dependencies.js";
+import errorMiddleware from "./middlewares/error_middleware.js";
+import checkAuthorizationTokenMiddleware from "./middlewares/check_authorization_token_middleware.js";
+import logMiddleware from "./middlewares/log_middleware.js";
+//import bcrypt from "bcrypt";
+
+//console.log("Hash de '1234':", bcrypt.hashSync("1234", 10));
 
 const app = express();
-app.use(express.json()); //Esto decodifica el cuerpo de las solicitudes como JSON
 
-console.log('Configurando rutas de usuario');
+app.use(express.json());
+app.use(checkAuthorizationTokenMiddleware);
+app.use(logMiddleware);
 
-// Le decimos a Express que todas las rutas del mainRouter empiecen con /api
-app.use('/api', mainRouter);
+const apiRouter = express.Router();
+app.use('/api', apiRouter);
+createRouter(apiRouter);
 
-app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
-});
+app.use(errorMiddleware);
+
+try {
+    await mongoose.connect(config.dbConnection);
+    console.log("Connectado a MongoDB");
+
+    app.listen(config.port, () => {
+        console.log(`Server escuchando en http://localhost:${config.port}`);
+    });
+} catch (error) {
+    console.error("Error connecting to MongoDB:", error);
+}

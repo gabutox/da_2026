@@ -1,45 +1,48 @@
-import { getDependency } from '../dependency.js';
+import { getDependency } from "../dependency.js";
+import bcrypt from "bcrypt";
 
 export class UserService {
-    getUsers() {
-        const repo = getDependency('userRepo');
-        const allUsers = repo.getAll();
-
-        // Retornar usuarios sin mostrar las passwords
-        return allUsers.map(u => ({ id: u.id, user: u.user }));
+    constructor() {
+        this.userRepo = getDependency("userRepo");
     }
 
-    addUser(user, password) {
-        const repo = getDependency('userRepo');
-        const allUsers = repo.getAll();
-
-        // Validar que usuario sea obligatorio
-        if (!user || typeof user !== 'string' || user.trim().length === 0) {
-            return { success: false, error: 'Se requiere un nombre de usuario' };
-        }
-
-        // Validar que contraseña sea obligatoria
-        if (!password || typeof password !== 'string' || password.length === 0) {
-            return { success: false, error: 'Se requiere una contraseña' };
-        }
-
-        // Validar que contraseña no sea "1234"
-        if (password === '1234') {
-            return { success: false, error: 'La contrasena no puede ser "1234"' };
-        }
-
-        // Validar que el nombre no exista ya
-        const userExists = allUsers.some(u => u.user.toLowerCase() === user.trim().toLowerCase());
-        if (userExists) {
-            return { success: false, error: 'El usuario ya existe' };
-        }
-
-        const newUser = repo.add(user.trim(), password);
-        return { success: true, user: newUser };
+    // GET /users
+    async getList() {
+        return await this.userRepo.getAll();
     }
 
-    deleteUser(id) {
-        const repo = getDependency('userRepo');
-        return repo.delete(id);
+    // GET /users/:username
+    async getByUsername(username) {
+        return await this.userRepo.findByUsername(username);
+    }
+
+    // POST /users
+    async add(user) {
+        if (!user.user_name)
+            throw new Error("El nombre de usuario es obligatorio");
+
+        if (!user.password)
+            throw new Error("La contraseña es obligatoria");
+
+        const existing = await this.userRepo.findOne({ user_name: user.user_name });
+        if (existing)
+            throw new Error("El nombre de usuario ya existe");
+
+        user.password = bcrypt.hashSync(user.password, 10);
+
+        return await this.userRepo.add(user);
+    }
+
+    // DELETE /users/:username
+    async deleteByUsername(username) {
+        return await this.userRepo.deleteByUsername(username);
+    }
+
+    // PATCH /users/:username
+    async updateByUsername(username, data) {
+        if (data.password)
+            data.password = bcrypt.hashSync(data.password, 10);
+
+        return await this.userRepo.updateByUsername(username, data);
     }
 }

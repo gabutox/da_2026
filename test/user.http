@@ -1,18 +1,41 @@
-### Obtener todos los usuarios
+@authorizationToken = 172512415394c21466ef208e0a7410dc877d4180fc1e33d901bbda21c6a85750
+
+### GET /users — lista todos los usuarios
 GET http://localhost:3000/api/users
-Content-Type: application/json
+Authorization: Bearer {{authorizationToken}}
 
 ###
-### Crear un nuevo usuario
+
+### GET /users/:username — obtiene un usuario por nombre
+GET http://localhost:3000/api/users/Adan
+Authorization: Bearer {{authorizationToken}}
+
+###
+
+### POST /users — crea un nuevo usuario
 POST http://localhost:3000/api/users
+Authorization: Bearer {{authorizationToken}}
 Content-Type: application/json
 
 {
-  "user": "Simon",
-  "password": "simon123"
+    "user_name": "Juan",
+    "password": "Segura123",
+    "role": "user"
 }
 
 ###
-### Eliminar un usuario
-DELETE http://localhost:3000/api/users/3
+
+### DELETE /users/:username — elimina un usuario
+DELETE http://localhost:3000/api/users/Juan
+Authorization: Bearer {{authorizationToken}}
+
+###
+
+### PATCH /users/:username — modifica un usuario
+PATCH http://localhost:3000/api/users/Juan
+Authorization: Bearer {{authorizationToken}}
 Content-Type: application/json
+
+{
+    "role": "admin"
+}

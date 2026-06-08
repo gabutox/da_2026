@@ -1,9 +1,8 @@
-import { Router } from 'express';
-import userRouter from './user_router.js';
+import { configureLoginRouter } from "./login_router.js";
+import { configureUserRouter} from './user_router.js';
 
-const mainRouter = Router();
-
-// Delegamos todo lo que vaya a /users al userRouter
-mainRouter.use('/users', userRouter);
-
-export default mainRouter;
+export function createRouter(router) {
+    console.log("Creando rutas principales...");
+    configureLoginRouter(router);
+    configureUserRouter(router);
+}
