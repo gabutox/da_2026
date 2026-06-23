@@ -1,0 +1,48 @@
+@authorizationToken = 172512415394c21466ef208e0a7410dc877d4180fc1e33d901bbda21c6a85750
+
+### GET /products — lista todos los productos
+GET http://localhost:3000/api/products
+Authorization: Bearer {{authorizationToken}}
+
+###
+
+### GET /products/:id — obtiene un producto por id
+GET http://localhost:3000/api/products/6a3a7b3a7069f8d6f38a1956
+Authorization: Bearer {{authorizationToken}}
+
+###
+
+### GET /products/category/:category — obtiene productos por categoría
+GET http://localhost:3000/api/products/category/gpu
+Authorization: Bearer {{authorizationToken}}
+
+###
+
+### POST /products — crea un nuevo producto
+POST http://localhost:3000/api/products
+Authorization: Bearer {{authorizationToken}}
+Content-Type: application/json
+
+{
+    "name": "RX 6500xt",
+    "brand": "AMD",
+    "price": 260000,
+    "category": "gpu"
+}
+
+###
+
+### DELETE /products/:id — elimina un producto
+DELETE http://localhost:3000/api/products/6a3a7b087069f8d6f38a1955
+Authorization: Bearer {{authorizationToken}}
+
+###
+
+### PATCH /products/:id — modifica un producto
+PATCH http://localhost:3000/api/products/6a3a7b3a7069f8d6f38a1956
+Authorization: Bearer {{authorizationToken}}
+Content-Type: application/json
+
+{
+    "stock": 5
+}
